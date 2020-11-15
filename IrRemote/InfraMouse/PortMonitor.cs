@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace InfraMouse
 {
@@ -12,6 +8,7 @@ namespace InfraMouse
     {
         private readonly SerialPort serialPort;
         private Timer timer;
+        private IrCodeDispatcher dispatcher = new IrCodeDispatcher();
         public PortMonitor(string name)
         {
             serialPort = new SerialPort(name);
@@ -31,8 +28,9 @@ namespace InfraMouse
                     str += serialPort.ReadExisting();
                 }
                 if (!string.IsNullOrEmpty(str))
-                {
+                {                    
                     Received?.Invoke(serialPort, str);
+                    dispatcher.Dispatch(str);
                 }
             }, this.serialPort, 500, 50);
         }
