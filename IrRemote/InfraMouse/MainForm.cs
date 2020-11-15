@@ -53,11 +53,15 @@ namespace InfraMouse
             monitor = new PortMonitor(ComPortsList.SelectedItem as string);
             monitor.Received += Log;
             monitor.Watch();
+            connectButton.Text = "Reconnect";
         }
 
         private void Log(object sender, string code) => portOutput.BeginInvoke((Action)(() => portOutput.Items.Add(code)));
 
-        private void apply_Click(object sender, EventArgs e) => CurrentListBox.Items.Add(portOutput.SelectedItem);
+        private void apply_Click(object sender, EventArgs e)
+        {
+            if (portOutput.SelectedItem != null) CurrentListBox.Items.Add(portOutput.SelectedItem);
+        }
 
         private void saveButton_Click(object sender, EventArgs e)
         {
